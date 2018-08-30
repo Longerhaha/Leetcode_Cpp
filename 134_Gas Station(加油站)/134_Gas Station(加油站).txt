@@ -1,0 +1,25 @@
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        //node_cost[i]记录节点i到下一个节点的花费
+        int len = gas.size();
+        int total_cost = 0;
+        vector<int> node_cost(len, 0);
+        for( int i = 0; i < len; i++){
+            node_cost[i] = gas[i] - cost[i]; 
+            total_cost += node_cost[i];
+        }
+        //如果有答案
+        if(total_cost >= 0){
+            int start = 0;
+            int thisSum = 0;
+            for( int i = 0; i < len; i++ ){
+                thisSum += node_cost[i];
+                if(thisSum < 0)
+                    thisSum = 0, start = i + 1;
+            }
+            return start;
+        }
+        return -1;
+    }
+};
