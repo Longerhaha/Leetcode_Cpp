@@ -1,0 +1,43 @@
+/**
+ * Definition for undirected graph.
+ * struct UndirectedGraphNode {
+ *     int label;
+ *     vector<UndirectedGraphNode *> neighbors;
+ *     UndirectedGraphNode(int x) : label(x) {};
+ * };
+ */
+class Solution {
+public:
+    UndirectedGraphNode *cloneGraph(UndirectedGraphNode *node) {
+        if(node == nullptr)
+            return nullptr;
+        //利用堆栈模拟递归，节省效率，否则每次递归都需要建立哈希表，代价超级昂贵
+        stack<UndirectedGraphNode *> s;
+        //无序哈希表用来查重
+        unordered_map<UndirectedGraphNode *, UndirectedGraphNode *> ump;
+        
+        UndirectedGraphNode *p_copy_node = new UndirectedGraphNode(node->label);
+        s.push(node);
+        ump[node] = p_copy_node;
+        while( !s.empty() ){
+            UndirectedGraphNode *tmp = s.top();
+            s.pop();
+            UndirectedGraphNode *ump_tmp = ump[tmp];
+            for( int i = 0; i < (tmp->neighbors).size(); i++ ){
+                //如果存在映射则不需要重复建立点，直接添加即可
+                UndirectedGraphNode * neghbors_tmp = (tmp->neighbors)[i];
+                if(ump.count(neghbors_tmp) > 0){
+                    (ump_tmp->neighbors).push_back(ump[neghbors_tmp]);
+                }
+                //否则需要添加、进堆栈和建立映射关系
+                else{
+                    UndirectedGraphNode *new_node = new UndirectedGraphNode(neghbors_tmp->label);
+                    (ump_tmp->neighbors).push_back(new_node);
+                    ump[neghbors_tmp] = new_node;
+                    s.push(neghbors_tmp);
+                }
+            }
+        }
+        return p_copy_node; 
+    }
+};
