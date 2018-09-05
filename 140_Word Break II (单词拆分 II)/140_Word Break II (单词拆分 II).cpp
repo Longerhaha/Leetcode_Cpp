@@ -32,7 +32,57 @@ public:
         }
     }*/
     
+    
+    //参考：https://github.com/haoel/leetcode/blob/master/algorithms/cpp/wordBreak/wordBreak.II.cpp
+    
+    //添加一个记录s路径的哈希表，以空间换时间，否则递归会超时
+    vector<string> wordBreak(string s, vector<string>& wordDict) {
+        unordered_set<string> uset;
+        //1.先将单词列表添加集合内
+        for( int i = 0; i < wordDict.size(); i++ ){
+            uset.insert(wordDict[i]);
+        }
+        //2.用来记录s的DFS路径，牺牲空间换时间
+        unordered_map<string, vector<string>> ump;
+        //3.返回带记录路径功能的DFS对s遍历的结果
+        return wordBreak_dfs_rcrd_path(s, uset, ump);
+    }
+    
+    //带记录路径功能的DFS
+    vector<string> wordBreak_dfs_rcrd_path(string s, unordered_set<string> &uset, unordered_map<string, vector<string>> &ump){
+        //如果s的方案存在,直接返回方案
+        if(ump.find(s) != ump.end())
+            return ump[s];
+        
+        //如果不存在则搜索
+        vector<string> break_s;
+        for( int i = 0 ; i < s.size(); i++ ){
+            string sub = s.substr(0, i + 1);
+            //如果字典中存在sub则需要深搜
+            if(uset.count() > 0){
+                //如果搜到尾巴了就可以返回了
+                if(i == s.size() - 1){
+                    break_s.push_back(sub);
+                    break;
+                }
+                //否则搜其后的字符串的结果并与sub合成路径记录在ump中
+                else{
+                    vector<string> later = wordBreak_dfs_rcrd_path(s.substr(i + 1, s.size() - i - 1), uset, ump);
+                    for( int j = 0; j < later.size(); j++ ){
+                        break_s.push_back(sub + " " + later[j]);
+                    }
+                }
+            }
+        }
+        //记录路径
+        ump[s] = break_s;
+        return ump[s];
+    }
+    
+    
+    
 
+    /* 基于动态规划的方法其实就是上述带有记录路径功能的DFS的变身而已，在这里就不过多详细
     vector<string> wordBreak(string s, vector<string>& wordDict) {
         unordered_set<string> uset;
         //1.先将单词列表添加集合内
@@ -91,5 +141,5 @@ public:
         return result[0];
     }
 
-    
+    */
 };
