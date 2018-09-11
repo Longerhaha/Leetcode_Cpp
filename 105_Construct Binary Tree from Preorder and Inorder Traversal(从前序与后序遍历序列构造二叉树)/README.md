@@ -34,7 +34,7 @@ __注意__:
 	* TreeNode*：构造的二叉树的根节点
 
 ## 思路	
-### 基于队列的层次遍历（BFS）
+### 递归
 
 	typedef vector<int>::iterator Iter;
     //基于递归形式的前序与中序遍历序列构造二叉树
