@@ -113,7 +113,5 @@ struct ListNode* reverseKGroup(struct ListNode* head, int k) {
 本题从两两交换链表中的节点稍微更改即可。
 ### 拓展
 如果给你的是双链表呢？
-
-
 	  
 # 希望我能在这一年坚持下来，每天都不放弃，每天都至少刷一道题，我相信我可以的！
