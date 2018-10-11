@@ -93,7 +93,7 @@ int strStr(string haystack, string needle) {
 ### 思考
 KMP 算法其实也不难理解，想明白了 next 矩阵由何而来是关键。
 ### 拓展
-可以了解下 BM、SUNDAY算法。
+可以了解下 BM、SUNDAY 算法。
 
 
 	  
