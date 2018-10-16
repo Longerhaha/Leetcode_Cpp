@@ -48,27 +48,29 @@ candidates 中的数字可以无限制重复被选取。
 	
 	
 ## 思路描述与代码	
-### 思路描述（回溯法）
-本题列举所有的可能性，很明显是用回溯方法做。
+### 思路描述（DFS）
+本题列举所有的可能性，很明显是用DFS做。
 
 ```cpp
 path 记录路径， ans 记录所有可以组合为 target 的所有列表， start 记录起始的下标 
 
-void backtrack( ans, path, start, target ){
+void DFS( ans, path, target, start ){
 	if(target < 0) 此时无法继续寻找组合了，因为都是正整数，所以剪枝，break;
 	else if(target == 0) 记录路径;
 	
 	for( i = start; i < candidates.size(); i++ ){
-		记录路径, path.push_back(candidates[i]);
-		backtrack(ans, path, start, taeget - candidates[i]);
-		恢复上一个节点的树状然后继续下一个分叉, path.push_back(candidates[i]);
+		//记录路径,
+		path.push_back(candidates[i]);
+		DFS(ans, path, start, taeget - candidates[i]);
+		//恢复上一个节点的树状然后继续下一个分叉的递归
+		path.push_back(candidates[i]);
 	}
 } 
 ```
 
 ### 代码
 ```cpp
-void combinationSum_BackTrack(vector<vector<int>>& ans, vector<int>& path, vector<int>& candidates, int target, int start){
+void combinationSum_DFS(vector<vector<int>>& ans, vector<int>& path, vector<int>& candidates, int target, int start){
 	if(target == 0){
 		ans.push_back(path);
 		return ;
@@ -77,14 +79,14 @@ void combinationSum_BackTrack(vector<vector<int>>& ans, vector<int>& path, vecto
 
 	for( int i = start; i < candidates.size(); i++ ){
 		path.push_back(candidates[i]);
-		combinationSum_BackTrack(ans, path, candidates, target - candidates[i], i);
+		combinationSum_DFS(ans, path, candidates, target - candidates[i], i);
 		path.pop_back();
 	}
 }
 vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
 	vector<vector<int>> ans;
 	vector<int> path;
-	combinationSum_BackTrack(ans, path, candidates, target, 0);
+	combinationSum_DFS(ans, path, candidates, target, 0);
 	return ans;
 }
 ```
