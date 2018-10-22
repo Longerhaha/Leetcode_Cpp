@@ -65,6 +65,7 @@ int maxSubArray_online_processing(const vector<int>& nums){
 }
 ```
 #### 分治
+```cpp
 int maxSubArray_divideAndConquer(const vector<int>& nums, const int start, const int end){
 	if(start == end) return nums[start];
 	int mid = (start + end) / 2;
@@ -87,7 +88,7 @@ int maxSubArray_divideAndConquer(const vector<int>& nums, const int start, const
 	int across_mid_max = left_across_mid_max + right_across_mid_max;
 	return max(left_max, max(right_max, across_mid_max));
 }
-
+```
 ## 思考与拓展
 ### 思考
 在线处理的时间复杂度为O(n)，分治的空间复杂度为O(nlogn)，二者的思想都值得回味。 
