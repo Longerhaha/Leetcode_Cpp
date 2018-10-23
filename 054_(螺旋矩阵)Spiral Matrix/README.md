@@ -46,12 +46,12 @@
 
 按如下圈的方式添加数据：
 
-              （上行）
-             ---------|
-    left_col |        | right_col
-             |---------
-              （下行）
-			  
+			  （上行）
+			----------
+    left_col|        | right_col
+            |        |
+            |--------|
+			  （下行）
 比如：
 
     [
@@ -60,11 +60,26 @@
      [ 7, 8, 9 ]
     ]
 	
-第一圈添加：上行1,2 右列3,6 下行9,8 左列7,4 第二圈 5
+第一圈添加：上行1,2,3 右列6,9 下行8 左列7,4 
+第二圈 5
 
 
 ### 代码
 ```cpp
+void draw_cycle(vector<int> &ans, const vector<vector<int>>& matrix, const int row, const int col, const int center){
+	int end_col = center + (col - 2 * center) - 1;
+	int end_row = center + (row - 2 * center) - 1;
+	for( int i = center; i <= end_col; i++ )
+		ans.push_back(matrix[center][i]);
+	for( int i = center + 1; i <= end_row; i++ )
+		ans.push_back(matrix[i][end_col]);
+	//end_row > center 防止当前圈是单行的特殊情况
+	for(int i = end_col - 1; i > center && end_row > center; i-- )
+		ans.push_back(matrix[end_row][i]);
+	//end_col > center 防止当前圈是单列的特殊情况
+	for(int i = end_row; i >= center + 1 && end_col > center; i-- )
+		ans.push_back(matrix[i][center]);
+}
 vector<int> spiralOrder(vector<vector<int>>& matrix) {
 	vector<int> ans;
 	if(matrix.size() == 0) return ans;
@@ -72,42 +87,20 @@ vector<int> spiralOrder(vector<vector<int>>& matrix) {
 	int col = matrix[0].size();
 	int len = row * col;
 	//转圈的数目
-	int circle = 1;
-	//每圈开始的中心位置
-	int r0 = 0, c0 = 0;
-	int cnt = 0;
-	while( cnt < len ){
-		//每次转圈上行和下行走动的步数
-		int row_size = col + 1 - circle * 2;
-		//每次转圈左列和右列走动的步数
-		int col_size = row + 1 - circle * 2;
-		//只剩一个中心点
-		if(row_size == 0 && col_size == 0){
-			ans.push_back(matrix[r0][c0]);
-			cnt++;
-		}
-		else{
-			//上行
-			for( int i = 0; i < row_size && cnt < len; i++ )
-				cnt++, ans.push_back(matrix[r0][c0 + i]);
-			//右列
-			for( int j = 0; j < col_size && cnt < len; j++ )
-				cnt++, ans.push_back(matrix[r0 + j][c0 + row_size]);
-			//下行
-			for( int i = row_size; i > 0 && cnt < len; i-- )
-				cnt++, ans.push_back(matrix[r0 + col_size][c0 + i]);
-			//左列
-			for( int j = col_size; j > 0 && cnt < len; j-- )
-				cnt++, ans.push_back(matrix[r0 + j][c0]);
-			r0++, c0++, circle++;
-		} 
+	int circle = 0;
+	//中心点(center, center)
+	int center = 0;
+	while( row >= 2 * circle + 1 && col >= 2 * circle + 1 ){
+		draw_cycle(ans, matrix, row, col, center);
+		circle++, center++;
 	}
+	
 	return ans;
 }
 ```
 ## 思考与拓展
 ### 思考
-本题抓住规律和不要超过矩阵所有元素的数目即可避免一些异常情况。
+本题抓住规律和增加判断条件避免一些异常情况即可。
 ### 拓展
 尝试一下[螺旋矩阵 II](https://leetcode-cn.com/problems/spiral-matrix-ii/)。
   
