@@ -1,22 +1,22 @@
-# leetcode
-# Stick to practice coding of algorithmic problems everyday and you will be a good algorithm engineer!
+# LeetCode
+# Stick to practice coding of algorithmic problems everyday and you would be a good algorithm engineer someday!
 ## No_(cn_name)English_name
 ## 1 问题描述、输入输出与样例
 ### 1.1 问题描述
 // description of the problem
-### 1.2 函数输入与输出
+### 1.2 输入与输出
 输入：
 * input_type param1:
 * input_type param2:
 
 输出：
 * output_type:
-### 1.3 问题样例
-#### 1.3.1 示例1
+### 1.3 样例
+#### 1.3.1 样例1
 输入: <br>
 输出: <br>
 解释： 
-#### 1.3.2 示例2
+#### 1.3.2 样例2
 输入: <br>
 输出: <br>
 解释：
@@ -38,4 +38,4 @@ xx|xx|xx
 ### 3.2 拓展
 //expansion of problem
 	  
-# 希望我能在这一年坚持下来，每天都不放弃，每天都至少刷一道题，我相信我可以的！
+## 希望我能在这一年坚持下来，每天都不放弃，每天都至少刷一道题，我相信我可以的！
