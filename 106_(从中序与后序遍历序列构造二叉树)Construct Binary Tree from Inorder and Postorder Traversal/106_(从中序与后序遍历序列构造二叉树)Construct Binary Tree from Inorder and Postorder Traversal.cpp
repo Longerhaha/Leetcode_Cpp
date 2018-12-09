@@ -8,26 +8,20 @@
  * };
  */
 class Solution {
+    typedef vector<int>::iterator iter;
 public:
-    typedef vector<int>::iterator Iter;
-    //递归实现根据中序与后序遍历序列构造二叉树
-    TreeNode* buildTree_recurse(Iter inbegin, Iter inend, Iter postbegin, Iter postend){
-        //如果中序遍历的开始指针与结束指针一致则返回空
-        if(inbegin == inend)
-            return nullptr;
-        //后序遍历的最后一个节点是根节点
-        TreeNode* tmp = new TreeNode(*(postend - 1));
-        //寻找后序遍历的最后一个节点在中序遍历结果的位置
-        Iter mid = find(inbegin, inend, *(postend - 1));
-        //递归左子树
-        tmp->left = buildTree_recurse(inbegin, mid, postbegin, postbegin + (mid - inbegin));
-        //递归右子树
-        tmp->right = buildTree_recurse(mid + 1, inend, postbegin + (mid - inbegin), postend - 1);
-        //返回根节点
-        return tmp;
-    }
-    
     TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
-        return buildTree_recurse(inorder.begin(), inorder.end(), postorder.begin(), postorder.end());
+        return buildTree_recurse(inorder.begin(), inorder.size(), postorder.begin(), postorder.size());
+    }
+    TreeNode* buildTree_recurse(iter inorder_begin, int inorder_len, iter postorder_begin, int postorder_len){
+        if(inorder_len == 0) return nullptr;
+        TreeNode* root = new TreeNode(*(postorder_begin + postorder_len - 1));
+        int i;
+        for( i = 0; i < inorder_len; i++ ){
+            if(*(inorder_begin + i) == *(postorder_begin + postorder_len - 1)) break;
+        }
+        root->left = buildTree_recurse(inorder_begin, i, postorder_begin, i);
+        root->right = buildTree_recurse(inorder_begin + i + 1, inorder_len - i - 1, postorder_begin + i, postorder_len - i - 1);
+        return root;
     }
 };

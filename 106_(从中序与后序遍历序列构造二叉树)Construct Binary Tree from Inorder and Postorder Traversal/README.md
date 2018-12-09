@@ -1,67 +1,75 @@
-# leetcode
-# stick to it everyday and you will be a good algorithm engineer!
+# LeetCode
+# Stick to practice coding of algorithmic problems everyday and you would be a good algorithm engineer someday!
 ## 106_(从中序与后序遍历序列构造二叉树)Construct Binary Tree from Inorder and Postorder Traversal
-## 问题描述、样例与输入输出
-
-### 问题描述
-
-根据一棵树的中序遍历与后序遍历构造二叉树。
-
+## 1 问题描述、输入输出与样例
+### 1.1 问题描述
+根据一棵树的中序遍历与后序遍历构造二叉树。<br>
 __注意__:
 你可以假设树中没有重复的元素。
+### 1.2 输入与输出
+输入：
+* vector<int>& inorder：中序遍历的序列的引用
+* vector<int>& postorder：后序遍历的序列的引用
 
+输出：
+* TreeNode*：构造的二叉树的根节点
+### 1.3 样例
+#### 1.3.1 样例1
+输入：中序遍历 inorder = [9,3,15,20,7]，后序遍历 postorder = [9,15,7,20,3]<br>
+输出: 
 
-### 问题样例
-
-	示例1:
-	输入: 
-	中序遍历 inorder = [9,3,15,20,7]
-	后序遍历 postorder = [9,15,7,20,3]
-
-	输出: 
 	    3
 	   / \
 	  9  20
-		/  \
+        /  \
 	   15   7
-	
-### 函数输入与输出
+## 2 思路描述与代码    
+### 2.1 思路描述（递归法）
+最常见的构造树的方法就是递归了。二叉树的后序遍历的最后节点肯定是根节点，该节点在中序遍历中是个分节点，在分节点左边的节点是左子树的所有节点，右边是右子树的所有节点。利用该思路构造二叉树。
+```cpp
+TreeNode* buildTree_recurse(inorder_begin, inorder_len, postorder_begin, postorder_len){
+    若中序遍历长度为 0 ,返回空指针;
+    构建根节点 root, 值为 *(postorder_begin + postorder_len - 1) ;
+    找到 *(postorder_begin + postorder_len - 1) 在中序遍历中的位置 idx;
+    //递归左右子树
+    root->left = buildTree_recurse(inorder_begin, idx, postorder_begin, idx);
+    root->right = buildTree_recurse(inorder_begin + idx + 1, inorder_len - idx - 1, postorder_begin + idx, postorder_len - idx - 1);
+    返回 root;
+}
+```
 
-* 输入：
-	* vector<int>& inorder：中序遍历的序列的引用
-	* vector<int>& postorder：后序遍历的序列的引用
-* 输出：
-	* TreeNode*：构造的二叉树的根节点
-
-## 思路	
-### 递归
-
-	typedef vector<int>::iterator Iter;
-    //递归实现根据中序与后序遍历序列构造二叉树
-    TreeNode* buildTree_recurse(Iter inbegin, Iter inend, Iter postbegin, Iter postend){
-        //如果中序遍历的开始指针与结束指针一致则返回空
-        if(inbegin == inend)
-            return nullptr;
-        //后序遍历的最后一个节点是根节点
-        TreeNode* tmp = new TreeNode(*(postend - 1));
-        //寻找后序遍历的最后一个节点在中序遍历结果的位置
-        Iter mid = find(inbegin, inend, *(postend - 1));
-        //递归左子树
-        tmp->left = buildTree_recurse(inbegin, mid, postbegin, postbegin + (mid - inbegin));
-        //递归右子树
-        tmp->right = buildTree_recurse(mid + 1, inend, postbegin + (mid - inbegin), postend - 1);
-        //返回根节点
-        return tmp;
+### 2.2 代码
+```cpp
+typedef vector<int>::iterator iter;
+TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+    return buildTree_recurse(inorder.begin(), inorder.size(), postorder.begin(), postorder.size());
+}
+TreeNode* buildTree_recurse(iter inorder_begin, int inorder_len, iter postorder_begin, int postorder_len){
+    if(inorder_len == 0) return nullptr;
+    TreeNode* root = new TreeNode(*(postorder_begin + postorder_len - 1));
+    int i;
+    for( i = 0; i < inorder_len; i++ ){
+        if(*(inorder_begin + i) == *(postorder_begin + postorder_len - 1)) break;
     }
+    root->left = buildTree_recurse(inorder_begin, i, postorder_begin, i);
+    root->right = buildTree_recurse(inorder_begin + i + 1, inorder_len - i - 1, postorder_begin + i, postorder_len - i - 1);
+    return root;
+    }
+```
     
-    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
-        return buildTree_recurse(inorder.begin(), inorder.end(), postorder.begin(), postorder.end());
-    }
-		
+## 3 思考与拓展
+### 3.1 思考
+本题主要利用二叉树中序和后序遍历的特点递归构造二叉树，思路与利用前序和后序遍历构造二叉树一致。
+#### 3.1.1 其他方法
+无。
+#### 3.1.2 复杂度分析
+方法|空间复杂度|时间复杂度
+--- | --- | ---
+递归法|O(n)|O(n)
+#### 3.1.3 难点分析
+1. 需要考虑边界条件即遍历长度为 0 的时候
+2. 找到递归的表达式
+### 3.2 拓展
+如果让你从前序遍历和后序遍历构造二叉树呢？如果能，构造的二叉树是唯一的吗？
 
-## 拓展与思考：
-### 拓展
-如果让你从前序遍历和后序遍历构造二叉树呢？构造的二叉树会是唯一的吗？
-### 思考
-本题与从前序遍历和中序遍历构造二叉树思路一致。	  
-# 希望我能在这一年坚持下来，每天都不放弃，每天都至少刷一道题，我相信我可以的！
+## 我一定要在这一年每天至少刷一道题，坚持不懈，持之以恒，我一定行！
