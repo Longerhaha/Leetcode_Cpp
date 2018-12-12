@@ -15,33 +15,40 @@
  *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
  */
+
 class Solution {
 public:
+    //函数中涉及到的指针操作
+    //head 为 ListNode* 类型的指针， head->val 是这个指针所指向的节点的值
+    //head->next 为 head 所指向的节点的下一个节点的指针
+    
+    //TreeNode* root = new TreeNode(val) 返回从堆中生成一个值为 val 的链表节点的指针给root
+    //root->left 是 root 所指向节点的左子树的指针, root->right 同理
+    
+    //解题思路
+    //1.快慢指针分离成左子树所有节点构成的链表、根节点和右子树所有节点构成的链表
+    //2.根据根节点递归分离的两个链表，第一个链表为左子树，第二个链表为右子树 
     TreeNode* sortedListToBST(ListNode* head) {
-        if(head == nullptr)
-            return nullptr;
-        //只有一个节点的情况
-        if(head->next == nullptr){
-            return new TreeNode(head->val);
-        }
-        //分离链表为两个部分
-        //快慢指针法，快指针走两部，慢指针走一步
-        ListNode*fast, *slow;
-        slow = head;
-        fast = head->next == nullptr ? nullptr : head->next->next;
-        while(fast != nullptr){
+        //边界情况:链表为空或者只有一个节点
+        if(head == nullptr) return nullptr;
+        if(head->next == nullptr) return new TreeNode(head->val);
+        
+        //1.快慢指针分离成根节点、左子树所有节点构成的链表和右子树所有节点构成的链表
+        //slow为二叉搜索树左子树所有节点构成的链表的链表的尾巴，其链表头为head
+        //slow->next->val为二叉搜索树根节点的值
+        //slow->next->next为二叉搜索树右子树所有节点构成的链表的头节点指针
+        ListNode *slow = head, *fast = head->next;
+        while( fast != nullptr ){
             fast = fast->next == nullptr ? nullptr : fast->next->next;
             slow = fast == nullptr ? slow : slow->next;
         }
-        //根据slow的下一个节点建立树的跟节点
+        //2. 根据根节点递归分离的两个链表，第一个链表为左子树，第二个链表为右子树
         TreeNode* root = new TreeNode(slow->next->val);
-        //记住分离为两个链表后，下一个链表的表头
-        ListNode* list2_head = slow->next->next;
-        //第一个链表的最后一个节点的下一个节点指向空
-        slow->next = nullptr;
-        //根据分离后的两个链表左右递归子树
+        slow->next = nullptr;//分离第一个链表
+        ListNode* list2head = slow->next->next;//获取第二个链表的头节点指针
+        //递归构造二叉搜索树
         root->left = sortedListToBST(head);
-        root->right = sortedListToBST(list2_head);
+        root->right = sortedListToBST(list2head);
         return root;
     }
 };
